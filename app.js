@@ -37,6 +37,25 @@ app.get('/expenses', (req, res) => {
     });
 });
 
+app.post('/expenses/add', (req, res) => {
+    const { user_id, item, paid } = req.body;
+
+    if (!user_id || !item || !paid) {
+        return res.status(400).send("Missing required fields");
+    }
+
+    const sql = "INSERT INTO expense (user_id, item, paid, date) VALUES (?, ?, ?, NOW())";
+    con.query(sql, [user_id, item, paid], function(err, results) {
+        if (err) {
+            return res.status(500).send("Database server error");
+        }
+        res.status(201).json({
+            message: "Expense added successfully",
+            expense_id: results.insertId
+        });
+    });
+});
+
 // login
 app.post('/login', (req, res) => {
     const {username, password} = req.body;
