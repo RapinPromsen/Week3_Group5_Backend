@@ -18,6 +18,25 @@ app.get('/password/:pass', (req, res) => {
     });
 });
 
+app.get('/expenses', (req, res) => {
+    const { user_id, date } = req.query;
+
+    let sql = "SELECT * FROM expense WHERE user_id = ?";
+    let params = [user_id];
+
+    if (date) {
+        sql += " AND DATE(date) = ?";
+        params.push(date);
+    }
+
+    con.query(sql, params, function(err, results) {
+        if (err) {
+            return res.status(500).send("Database server error");
+        }
+        res.json(results);
+    });
+});
+
 // login
 app.post('/login', (req, res) => {
     const {username, password} = req.body;
