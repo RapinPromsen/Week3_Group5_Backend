@@ -56,6 +56,28 @@ app.post('/expenses/add', (req, res) => {
     });
 });
 
+app.delete('/expenses/:id', (req, res) => {
+    const expenseId = req.params.id;
+
+    if (!expenseId) {
+        return res.status(400).send("Expense ID is required");
+    }
+
+    const sql = "DELETE FROM expense WHERE id = ?";
+    con.query(sql, [expenseId], (err, results) => {
+        if (err) {
+            return res.status(500).send("Database server error");
+        }
+
+        if (results.affectedRows === 0) {
+            return res.status(404).send("Expense not found");
+        }
+
+        res.status(200).json({ message: "Expense deleted successfully" });
+    });
+});
+
+
 // login
 app.post('/login', (req, res) => {
     const {username, password} = req.body;
