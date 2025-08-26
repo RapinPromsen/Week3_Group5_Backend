@@ -5,4 +5,4 @@ const con = mysql.createConnection({
     password: '',
     database: 'expenses'
 });
-module.exports = con;
+module.exports = con; //เสร็จ
